@@ -1,39 +1,43 @@
 const ricettaBtn = document.getElementById('ricetta-btn');
 const ricettaContainer = document.getElementById('ricetta-container');
-const API_URL = 'https://www.themealdb.com/api/json/v1/1/random.php';
+const API_URL = 'https://www.themealdb.com/api/json/v1/1/search.php?s=chicken';
 
-async function fetchRicettaCasuale() {
-    ricettaContainer.innerHTML = '<h2>Caricamento in corso...</h2>';
+async function cercaRicette() {
+    ricettaContainer.textContent = 'Caricamento in Corso...'
 
     try {
         const response = await fetch(API_URL);
         const data = await response.json();
-        const ricetta = data.meals[0];
-        visualizzaRicetta(ricetta);
+        const ricette = data.meals;
+        visualizzaListaRicette(ricette);
     } catch (error) {
         console.error('Si è verificato un errore:', error);
-        ricettaContainer.innerHTML = '<h2>Si è verificato un errore</h2>';
+        ricettaContainer.textContent = 'Si è verificato un errore';
     }
 }
 
-function visualizzaRicetta(ricetta) {
-    const htmlContent = `
-    <div class='ricetta-card'>
-        <h2>${ricetta.strMeal}</h2>
-        <img src="${ricetta.strMealThumb}" alt="Immagine di ${ricetta.strMeal}" class="ricetta-img">
-        <div class='ricetta-dettagli'>
-            <p><strong>Categoria:</strong> ${ricetta.strCategory}</p>
-            <p><strong>Area:</strong> ${ricetta.strArea}</p>
-        </div>
+function visualizzaListaRicette(ricette) {
 
-        <div class='ricetta-istruzioni'>
-            <h3>Istruzioni:</h3>
-            <p>${ricetta.strInstructions.replace(/\r\n/g, "<br>")}</p>
-        </div>
-    </div>
-    `;
+    ricettaContainer.textContent = '';
 
-    ricettaContainer.innerHTML = htmlContent;
+    if (!ricette || ricette.length === 0) {
+        ricettaContainer.textContent = 'Non ci sono ricette.';
+        return;
+    }
+
+    ricette.forEach(ricetta => {
+
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'ricetta-card';
+        cardDiv.innerHTML = `
+            <h3>${ricetta.strMeal}</h3>
+            <img src="${ricetta.strMealThumb}" alt="Immagine di ${ricetta.strMeal}">
+            <p>Categoria: ${ricetta.strCategory}</p>
+        `;
+
+        ricettaContainer.appendChild(cardDiv);
+
+    });
 }
 
-ricettaBtn.addEventListener('click', fetchRicettaCasuale);
+ricettaBtn.addEventListener('click', cercaRicette);
