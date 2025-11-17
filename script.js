@@ -1,32 +1,38 @@
-const ricettaBtn = document.getElementById('ricetta-btn');
+const searchForm = document.getElementById('search-form');
+const searchInput = document.getElementById('search-input');
 const ricettaContainer = document.getElementById('ricetta-container');
-const API_URL = 'https://www.themealdb.com/api/json/v1/1/search.php?s=chicken';
 
-async function cercaRicette() {
-    ricettaContainer.textContent = 'Caricamento in Corso...'
+async function cercaRicette(query) {
+    const API_URL = `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`;
+
+    ricettaContainer.innerHTML = 'Caricamento in Corso...';
 
     try {
         const response = await fetch(API_URL);
+        if(!response.ok) {
+            throw new Error (`Errore HTTP! Status: ${response.status}`);
+        }
+
         const data = await response.json();
         const ricette = data.meals;
+
         visualizzaListaRicette(ricette);
     } catch (error) {
-        console.error('Si è verificato un errore:', error);
-        ricettaContainer.textContent = 'Si è verificato un errore';
+        console.error(`Si e verificato un errore durante il fetch:`, error);
+        ricettaContainer.innerHTML = `<p style ="color: red;">Si e' verificato un errore durante il recupero dei dati: ${error.message}</p>`
     }
 }
 
 function visualizzaListaRicette(ricette) {
 
-    ricettaContainer.textContent = '';
+    ricettaContainer.innerHTML = '';
 
     if (!ricette || ricette.length === 0) {
-        ricettaContainer.textContent = 'Non ci sono ricette.';
+        ricettaContainer.innerHTML = '<p>Nessuna ricetta trovata!</p>';
         return;
     }
 
     ricette.forEach(ricetta => {
-
         const cardDiv = document.createElement('div');
         cardDiv.className = 'ricetta-card';
         cardDiv.innerHTML = `
@@ -36,8 +42,20 @@ function visualizzaListaRicette(ricette) {
         `;
 
         ricettaContainer.appendChild(cardDiv);
-
     });
 }
 
-ricettaBtn.addEventListener('click', cercaRicette);
+searchForm.addEventListener('submit', (e) => {
+
+    e.preventDefault();
+
+    const query = searchInput.value.trim();
+
+    if (query) {
+        cercaRicette(query);
+    } else {
+        ricettaContainer.innerHTML = '<h2>Per favore, inserisci un termine di ricerca.</h2>';
+    }
+
+    searchInput.value = '';
+});

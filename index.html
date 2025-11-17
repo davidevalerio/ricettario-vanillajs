@@ -7,17 +7,26 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+
     <header>
-        <h1>Ricettario Casuale</h1>
+        <h1>Il Mio Ricettario API</h1>
     </header>
 
     <main>
-        <button id="ricetta-btn">Mostra Ricetta Casuale</button>
+        <form id="search-form">
+            <input
+                type="text"
+                id="search-input"
+                placeholder="Inserisci nome piatto"
+                required
+            >
+            <button type="submit">Cerca Ricette</button>
+        </form>
 
         <div id="ricetta-container">
-            <p>Clicca sul pulsante per scoprire una nuova ricetta!</p>
+            <p>Inserisci il nome di un piatto (es. chicken, beef, pasta)</p>
         </div>
+
     </main>
 
     <script src="script.js"></script>
