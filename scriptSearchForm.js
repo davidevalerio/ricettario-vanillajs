@@ -10,7 +10,7 @@ const ricettaContainer = document.getElementById('ricetta-container');
 // 1. Funzione Principale: cercaRicette (Fetch Iniziale per Lista)
 // =======================================================
 async function cercaRicette(query) {
-    // 1. Costruisce la URL dinamicamente per la ricerca
+    // 1. Costruisce la URL dinamicamente per la ricerqueryca
     const API_URL = `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`;
 
     ricettaContainer.innerHTML = '<p>Caricamento in Corso...</p>';
